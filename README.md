@@ -12,7 +12,7 @@ You can also modify the sign appearance in the config.yml! :smiley:
 
 ## Plugin Review
 
-I made a video review of the plugins for the ones that still dont understand how to use VegaLeaderboards. I hope it will be useful for you all! :wink:
+I made a video review of the plugins for the ones that still dont understand how to use VegaHCFElevator. I hope it will be useful for you all! :wink:
 
 https://www.youtube.com/watch?v=kZ3k8KSOm3I
 

@@ -43,14 +43,14 @@ class Loader extends PluginBase implements Listener {
         if(strtolower($lines[0]) == "[elevator]") {
           if($event->getBlock()->getPosition()->getY() < 2) {
               $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), TextFormat::RED. "Error"]));
-              $event->getPlayer()->sendMessage(TextFormat::colorize($this->getConfigValue("error-y-message")));
+              $event->getPlayer()->sendMessage(TextFormat::colorize($this->getConfigValue("error.y-message")));
           } elseif(strtolower($lines[1]) == "up") {
               $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), "Up"]));
           } elseif(strtolower($lines[1]) == "down") {
               $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), "Down"]));
           } else{
               $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), TextFormat::RED. "Error"]));
-              $event->getPlayer()->sendMessage(TextFormat::colorize($this->getConfigValue("error-message")));
+              $event->getPlayer()->sendMessage(TextFormat::colorize($this->getConfigValue("error.message")));
           }
         }
     }

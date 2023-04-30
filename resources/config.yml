@@ -3,4 +3,6 @@
 # Use & to set the colors you want!
 
 prefix: "&7[&4Elevator&7]&f"
-error-message: "&cERROR | Elevator must be above y = 1."
+error:
+  message: "§cERROR | Elevator syntax is: [elevator] up or [elevator] down."
+  y-message: "&cERROR | Elevator must be above y = 1."

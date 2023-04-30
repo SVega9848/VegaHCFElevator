@@ -26,58 +26,45 @@ class Loader extends PluginBase implements Listener {
     }
 
     public function onTouchSign(PlayerInteractEvent $event) {
-        $player = $event->getPlayer();
-        $block = $event->getBlock();
-
-        if($event->getAction() == PlayerInteractEvent::LEFT_CLICK_BLOCK) {
-        }
-
         if($event->getAction() == PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
-            if($block instanceof BaseSign) {
+          $block = $event->getBlock();
+          if($block instanceof BaseSign) {
                 $lines = $block->getText()->getLines();
-
-                if($lines[0] == TextFormat::colorize($this->getConfigValue("prefix")) && $lines[1] == "Up") {
-                    $this->checkAvailableSign($player, $block, "up");
-                }
-
-                if($lines[0] == TextFormat::colorize($this->getConfigValue("prefix")) && $lines[1] == "Down") {
-                    $this->checkAvailableSign($player, $block, "down");
+                if($lines[0] == TextFormat::colorize($this->getConfigValue("prefix"))) {
+                    $this->checkAvailableSign($event->getPlayer(), $block, $lines[1]);
                 }
             }
         }
     }
 
     public function onTextChange(SignChangeEvent $event) {
-        $text = $event->getNewText();
-        $lines = $text->getLines();
+        $lines = $event->getNewText()->getLines();
 
-        if(strtolower($lines[0]) == "[elevator]" && strtolower($lines[1]) == "up") {
-            if($event->getBlock()->getPosition()->getY() < 2) {
-                $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), TextFormat::RED. "Error"]));
-                $event->getPlayer()->sendMessage(TextFormat::colorize($this->getConfigValue("error-message")));
-            } else {
-                $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), "Up"]));
-            }
-        }
-
-        if(strtolower($lines[0]) == "[elevator]" && strtolower($lines[1]) == "down") {
-            if($event->getBlock()->getPosition()->getY() < 2) {
-                $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), TextFormat::RED. "Error"]));
-                $event->getPlayer()->sendMessage(TextFormat::colorize($this->getConfigValue("error-message")));
-            } else {
-                $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), "Down"]));
-            }
+        if(strtolower($lines[0]) == "[elevator]") {
+          if($event->getBlock()->getPosition()->getY() < 2) {
+              $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), TextFormat::RED. "Error"]));
+              $event->getPlayer()->sendMessage(TextFormat::colorize($this->getConfigValue("error-y-message")));
+          } elseif(strtolower($lines[1]) == "up") {
+              $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), "Up"]));
+          } elseif(strtolower($lines[1]) == "down") {
+              $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), "Down"]));
+          } else{
+              $event->setNewText(new SignText([TextFormat::colorize($this->getConfigValue("prefix")), TextFormat::RED. "Error"]));
+              $event->getPlayer()->sendMessage(TextFormat::colorize($this->getConfigValue("error-message")));
+          }
         }
     }
 
     public function checkAvailableSign(Player $player, BaseSign $sign, string $typeCheck) {
+        $signX = $sign->getPosition()->getX();
+        $signZ = $sign->getPosition()->getZ();
         if($typeCheck == "up") {
             for($count = $sign->getPosition()->getY() + 1; $count < 256; $count++) {
-                $block = $player->getWorld()->getBlockAt($sign->getPosition()->getX(), $count, $sign->getPosition()->getZ());
+                $block = $player->getWorld()->getBlockAt($signX, $count, $signZ);
                 if($block instanceof BaseSign) {
                     $lines = $block->getText()->getLines();
                     if($lines[0] == TextFormat::colorize($this->getConfigValue("prefix")) && $lines[1] == "Down") {
-                        $player->teleport(new Vector3($sign->getPosition()->getX() + 0.5, $count, $sign->getPosition()->getZ() + 0.5));
+                        $player->teleport(new Vector3($signX + 0.5, $count, $signZ + 0.5));
                     }
                 }
             }
@@ -85,11 +72,11 @@ class Loader extends PluginBase implements Listener {
 
         if($typeCheck == "down") {
             for($count = $sign->getPosition()->getY() - 1; $count > 1; $count--) {
-                $block = $player->getWorld()->getBlockAt($sign->getPosition()->getX(), $count, $sign->getPosition()->getZ());
+                $block = $player->getWorld()->getBlockAt($signX, $count, $signZ);
                 if($block instanceof BaseSign) {
                     $lines = $block->getText()->getLines();
                     if($lines[0] == TextFormat::colorize($this->getConfigValue("prefix")) && $lines[1] == "Up") {
-                        $player->teleport(new Vector3($sign->getPosition()->getX() + 0.5, $count, $sign->getPosition()->getZ() + 0.5));
+                        $player->teleport(new Vector3($signX + 0.5, $count, $signZ + 0.5));
                     }
                 }
             }
